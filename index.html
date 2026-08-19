@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>AI 概念学习卡</title>
+<style>
+:root{
+  --bg:#1a0e07; --card:#2a1a0e; --card2:#241508;
+  --l1:#fff5e6; --l2:#fff5e6; --body:#f0e0c8; --aux:#e8c590; --minor:#c4a878;
+  --locked:#5a4a3a; --cta:#8cc8ff; --ok:#4ade80; --warn:#f0c060;
+  --gold:rgba(245,180,80,0.12); --gold-line:rgba(245,180,80,0.35);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  color:var(--body);
+  background:linear-gradient(168deg,#2e1c0a 0%,#3d2812 12%,#351f0e 25%,#281608 38%,#1e1208 50%,#241608 62%,#2a1a0a 75%,#1a0e07 88%,#221208 100%);
+  background-attachment:fixed;
+  overflow-x:hidden;
+}
+/* ── 壁画装饰层（WALL-E 片尾 × 敦煌飞天，纯 CSS） ── */
+#mural{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.sun{position:absolute;top:-90px;right:-70px;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,rgba(240,192,96,0.34),rgba(240,192,96,0.12) 55%,transparent 70%)}
+.mount{position:absolute;bottom:-40px;left:-10%;width:120%;height:150px;opacity:0.5}
+.mount::before{content:"";position:absolute;left:0;bottom:0;width:100%;height:150px;
+  background:linear-gradient(175deg,transparent 38%,rgba(42,26,10,0.9) 38%,rgba(42,26,10,0.9) 60%,transparent 60%);}
+.mount::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:110px;
+  background:linear-gradient(170deg,transparent 42%,rgba(26,14,7,0.95) 42%,rgba(26,14,7,0.95) 68%,transparent 68%);}
+.ribbon{position:absolute;top:64px;left:-40px;width:220px;height:56px;opacity:0.16;
+  background:linear-gradient(115deg,transparent 20%,rgba(245,180,80,0.9) 38%,rgba(232,197,144,0.9) 50%,rgba(245,180,80,0.9) 62%,transparent 80%);
+  border-radius:60% 40% 60% 40%/80% 60% 80% 60%;transform:rotate(-8deg)}
+.ribbon.r2{top:auto;bottom:110px;left:auto;right:-60px;transform:rotate(10deg) scaleX(-1)}
+/* ── 结构 ── */
+#app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:14px 14px 96px;min-height:100%}
+header.top{display:flex;align-items:baseline;justify-content:space-between;padding:6px 4px 14px}
+.brand{font-size:24px;font-weight:700;color:var(--l1);text-shadow:0 2px 10px rgba(240,192,96,0.35),0 1px 2px #000}
+.brand small{display:block;font-size:12px;font-weight:400;color:var(--minor);margin-top:2px}
+.stats{font-size:11px;color:var(--minor);text-align:right;line-height:1.6}
+/* ── 卡片 ── */
+.card{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid rgba(245,180,80,0.16);
+  border-radius:18px;padding:16px;margin-bottom:12px;position:relative}
+.card.featured{border:1px solid var(--gold-line);box-shadow:0 6px 24px rgba(0,0,0,0.4),0 0 0 1px rgba(245,180,80,0.08) inset}
+.flag{position:absolute;top:12px;right:12px;font-size:11px;color:#1a0e07;font-weight:700;
+  background:linear-gradient(120deg,#f0c060,#e8c590);border-radius:8px;padding:3px 8px;letter-spacing:1px}
+.hook{font-size:17px;font-weight:600;color:var(--l2);text-shadow:0 1px 3px rgba(0,0,0,0.7);line-height:1.45;padding-left:10px;
+  border-left:3px solid var(--gold-line);margin-bottom:10px}
+.q{font-size:15px;line-height:1.6;color:var(--body);margin:8px 0}
+.teaser{font-size:13px;color:var(--aux);font-style:italic;line-height:1.6;margin:8px 0;opacity:0.92}
+.teaser::before{content:"部分解析 · ";font-style:normal;color:var(--minor)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.chip{font-size:11px;padding:3px 9px;border-radius:99px;border:1px solid rgba(232,197,144,0.25);color:var(--aux)}
+.chip.gold{background:var(--gold);border-color:var(--gold-line);color:var(--l1)}
+.chip.green{background:rgba(74,222,128,0.12);border-color:rgba(74,222,128,0.4);color:var(--ok)}
+.chip.minor{color:var(--minor);border-color:rgba(196,168,120,0.25)}
+.row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:8px}
+.meta{font-size:12px;color:var(--minor)}
+.meta b{color:var(--aux);font-weight:600}
+button{cursor:pointer;border:none;font-family:inherit}
+.btn-cta{background:var(--cta);color:#12202a;font-weight:700;font-size:14px;border-radius:12px;padding:10px 18px;
+  box-shadow:0 4px 14px rgba(140,200,255,0.25)}
+.btn-cta:active{transform:scale(0.97)}
+.btn-ok{background:var(--ok);color:#0c2416;font-weight:700;font-size:14px;border-radius:12px;padding:10px 18px;
+  box-shadow:0 4px 14px rgba(74,222,128,0.25)}
+.done-badge{font-size:12px;font-weight:700;color:var(--ok);border:1px solid rgba(74,222,128,0.45);
+  background:rgba(74,222,128,0.1);padding:7px 12px;border-radius:10px}
+/* 筛选 */
+.filters{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.f-chip{flex:0 0 auto;font-size:13px;padding:7px 14px;border-radius:99px;background:rgba(42,26,10,0.8);
+  color:var(--aux);border:1px solid rgba(232,197,144,0.2)}
+.f-chip.on{background:var(--gold);border-color:var(--gold-line);color:var(--l1);font-weight:600}
+.sec-title{font-size:15px;font-weight:600;color:var(--aux);margin:16px 4px 10px;letter-spacing:1px}
+/* ── 详情页 ── */
+.back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--cta);background:none;padding:6px 0;margin-bottom:8px}
+h1.name{font-size:26px;font-weight:700;color:var(--l1);text-shadow:0 2px 12px rgba(240,192,96,0.4),0 1px 2px #000;line-height:1.3;margin:6px 0 4px}
+.sub{font-size:13px;color:var(--aux);margin-bottom:14px}
+.block{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid rgba(245,180,80,0.14);
+  border-radius:16px;padding:14px;margin-bottom:12px}
+.block h3{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;color:var(--l2);
+  text-shadow:0 1px 2px #000;margin-bottom:10px}
+.num{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,rgba(245,180,80,0.3),rgba(245,180,80,0.1));
+  border:1px solid var(--gold-line);color:var(--l1);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.dessert{background:linear-gradient(120deg,rgba(245,180,80,0.16),rgba(245,180,80,0.05));
+  border:1px solid var(--gold-line);border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:13px;color:var(--aux)}
+.dessert b{color:var(--l1)}
+.point{display:flex;gap:8px;font-size:14px;line-height:1.7;color:var(--body);margin:6px 0}
+.point::before{content:"◆";color:var(--gold-line);font-size:10px;margin-top:6px}
+.def{font-size:14px;line-height:1.8;color:var(--body)}
+.angle{font-size:13px;line-height:1.8;color:var(--body)}
+.angle b{color:var(--aux)}
+.rel-tag{font-size:12px;padding:5px 11px;border-radius:99px;background:rgba(140,200,255,0.12);
+  border:1px solid rgba(140,200,255,0.4);color:var(--cta)}
+.ref{font-size:12px;color:var(--minor);line-height:1.7}
+/* 游戏选项 */
+.opt{display:block;width:100%;text-align:left;background:rgba(26,14,7,0.55);border:1px solid rgba(232,197,144,0.2);
+  border-radius:12px;padding:11px 13px;font-size:14px;color:var(--body);margin:8px 0;line-height:1.5}
+.opt:active{transform:scale(0.99)}
+.opt.correct{border-color:var(--ok);color:var(--ok);background:rgba(74,222,128,0.1);font-weight:700}
+.opt.wrong{border-color:var(--warn);color:var(--warn);background:rgba(240,192,96,0.08)}
+.opt:disabled{opacity:0.9}
+.judge-row{display:flex;gap:10px;margin:10px 0}
+.j-btn{flex:1;font-size:20px;font-weight:700;border-radius:12px;padding:14px 0}
+.j-yes{background:rgba(74,222,128,0.16);border:2px solid var(--ok);color:var(--ok)}
+.j-no{background:rgba(240,192,96,0.12);border:2px solid var(--warn);color:var(--warn)}
+.flip-wrap{perspective:800px;margin:10px auto;width:100%}
+.flip{position:relative;width:100%;height:150px;transform-style:preserve-3d;transition:transform .6s}
+.flip.open{transform:rotateY(180deg)}
+.flip .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:14px;font-size:15px;line-height:1.6}
+.flip .front{background:linear-gradient(140deg,#3d2812,#2a1a0a);border:1px solid var(--gold-line);color:var(--aux)}
+.flip .back{transform:rotateY(180deg);background:linear-gradient(140deg,#351f0e,#241508);border:1px solid rgba(232,197,144,0.35);color:var(--l1)}
+.explain{display:none;background:rgba(26,14,7,0.6);border-left:3px solid var(--gold-line);border-radius:0 12px 12px 0;
+  padding:12px;font-size:13px;line-height:1.8;color:var(--body);margin-top:10px}
+.explain.show{display:block}
+.feedback{font-size:13px;font-weight:700;margin-top:8px}
+.feedback.ok{color:var(--ok)} .feedback.no{color:var(--warn)}
+/* 完成学习 */
+.complete-wrap{margin:18px 0 8px}
+.btn-complete{width:100%;background:var(--ok);color:#0c2416;font-size:16px;font-weight:700;border-radius:14px;padding:14px;
+  box-shadow:0 6px 18px rgba(74,222,128,0.28)}
+.btn-complete:disabled{background:#2f3a2f;color:#8aa88f;box-shadow:none}
+/* ── 日积月累 ── */
+.cheer{background:linear-gradient(130deg,rgba(245,180,80,0.2),rgba(245,180,80,0.04));border:1px solid var(--gold-line);
+  border-radius:16px;padding:18px;text-align:center;margin-bottom:12px}
+.cheer .t1{font-size:20px;font-weight:700;color:var(--l1);text-shadow:0 2px 10px rgba(240,192,96,0.4);line-height:1.5}
+.cheer .t2{font-size:12px;color:var(--aux);margin-top:6px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.stat{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid rgba(245,180,80,0.14);border-radius:14px;padding:14px 8px;text-align:center}
+.stat .v{font-size:22px;font-weight:700;color:var(--l1);text-shadow:0 1px 6px rgba(240,192,96,0.3)}
+.stat .k{font-size:11px;color:var(--minor);margin-top:4px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;padding:0 4px 8px}
+.cal-head .m{font-size:16px;font-weight:600;color:var(--l2)}
+.cal-head button{background:rgba(42,26,10,0.8);border:1px solid rgba(232,197,144,0.2);color:var(--aux);border-radius:8px;padding:6px 10px;font-size:13px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.cal-grid .dow{font-size:11px;color:var(--minor);text-align:center;padding:4px 0}
+.cell{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--minor);
+  background:rgba(42,26,10,0.35);position:relative}
+.cell.learned{background:linear-gradient(140deg,rgba(245,180,80,0.28),rgba(245,180,80,0.08));
+  border:1px solid var(--gold-line);font-size:16px}
+.cell.learned .dnum{position:absolute;top:2px;right:4px;font-size:9px;color:var(--aux)}
+.cell.today{border:1px solid var(--cta)}
+.wall{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.badge{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid rgba(245,180,80,0.16);border-radius:14px;padding:12px}
+.badge .e{font-size:28px}
+.badge .n{font-size:14px;font-weight:600;color:var(--l2);margin:4px 0 2px}
+.badge .d{font-size:11px;color:var(--minor)}
+.timeline{position:relative;padding-left:22px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+  background:linear-gradient(180deg,rgba(245,180,80,0.55),rgba(245,180,80,0.12))}
+.t-item{position:relative;margin-bottom:12px}
+.t-item::before{content:"";position:absolute;left:-19px;top:5px;width:10px;height:10px;border-radius:50%;
+  background:linear-gradient(135deg,#f0c060,#e8c590);box-shadow:0 0 8px rgba(240,192,96,0.7)}
+.t-item .d{font-size:11px;color:var(--minor)}
+.t-item .n{font-size:14px;color:var(--body);margin-top:2px}
+.empty{font-size:13px;color:var(--minor);text-align:center;padding:22px 0;line-height:1.8}
+/* ── TabBar ── */
+#tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;justify-content:center}
+#tabbar .inner{display:flex;width:100%;max-width:520px;background:linear-gradient(180deg,rgba(36,21,8,0.96),rgba(26,14,7,0.98));
+  border-top:1px solid rgba(245,180,80,0.2);backdrop-filter:blur(8px)}
+.tab{flex:1;background:none;color:var(--minor);font-size:12px;padding:10px 0 14px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab .ic{font-size:20px;filter:grayscale(1) brightness(0.7)}
+.tab.on{color:var(--l1);font-weight:600}
+.tab.on .ic{filter:none}
+/* toast */
+#toast{position:fixed;left:50%;top:18%;transform:translateX(-50%) translateY(-10px);z-index:20;
+  background:linear-gradient(120deg,rgba(61,40,18,0.97),rgba(42,26,10,0.97));border:1px solid var(--gold-line);
+  color:var(--l1);font-size:14px;padding:12px 20px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  opacity:0;pointer-events:none;transition:all .3s;text-align:center;max-width:86%}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div id="mural"><div class="sun"></div><div class="ribbon"></div><div class="ribbon r2"></div><div class="mount"></div></div>
+<div id="app"></div>
+<nav id="tabbar">
+  <div class="inner">
+    <button class="tab on" data-tab="home"><span class="ic">🧭</span>学习探索</button>
+    <button class="tab" data-tab="cal"><span class="ic">🏮</span>日积月累</button>
+  </div>
+</nav>
+<div id="errbar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99;background:#7a2a2a;color:#fff5e6;font-size:13px;padding:10px 14px;line-height:1.5"></div>
+<div id="toast"></div>
+<script>
+window.addEventListener('error', function(e){
+  var b = document.getElementById('errbar');
+  if (b){ b.style.display = 'block'; b.textContent = '页面运行出错：' + (e && e.message ? e.message : '未知错误') + '（请把这句话发给开发者）'; }
+});
+</script>
+<script>
+"use strict";
+/* ══════════ 素材库：5 章节 · 28 概念（源自课程文档与《人工智能：一种现代的方法》） ══════════ */
+const CHAPTERS = ["逻辑与知识表示","概率与贝叶斯","博弈与决策","规划与搜索","认知与思维"];
+const CONCEPTS = [
+{id:"atom",name:"原子命题",emoji:"🧩",ch:0,diff:2,temp:3,attract:6,type:"choice",
+ hook:"一句话能不能进 AI 的“法庭”？",
+ q:"下面哪句是合格的原子命题？",
+ opts:["今天下雨","请把窗户关上","你好！","如果明天下雨"],ans:0,
+ teaser:"命题必须能判断真假——命令和问候语直接出局。",
+ explain:"原子命题是不可再分、能判断真假的陈述句。“请把窗户关上”是祈使句没有真假，“你好！”是感叹。AI 的推理建立在大量真假可判定的原子上。",
+ def:"原子命题：不可再分的、能判断真假的陈述句，通常用 P、Q、R 表示。",
+ points:["能判断真假是唯一入场券","疑问句/祈使句/感叹句都不是命题","复杂命题 = 原子命题 + 联结词","命题是逻辑推理的最小单位"],
+ angle:{book:"《逻辑学导论》",story:"把“这件衣服好看”改成“这件衣服月销超过 1000 件”，系统才能判断真假。"},
+ related:["一阶逻辑","知识图谱"],ref:"AI培训第二课",dessert:"知之为知之，不知为不知。"},
+{id:"fol",name:"一阶逻辑",emoji:"🦉",ch:0,diff:4,temp:4,attract:7,type:"choice",
+ hook:"“所有人都会死”——一句话装不下？",
+ q:"“每个人都有一个朋友”用一阶逻辑怎么表达？",
+ opts:["∀x(Person(x)→∃y(Person(y)∧Friend(x,y)))","∃x(Person(x)∧∀y(Person(y)→Friend(y,x)))","∀x∀y Friend(x,y)","Person→Friend"],ans:0,
+ teaser:"全称在前、存在在后；箭头和合取不能乱配。",
+ explain:"选项 2 是“存在一个人，他是所有人的朋友”，正好相反。∀x(P→∃y(P∧F)) 才表示“对每个人，都存在一个朋友”。",
+ def:"一阶逻辑：引入谓词、量词（∀/∃）、变量与域的命题逻辑扩展，能表达对象及其关系。",
+ points:["∀ 配 →（对全部）","∃ 配 ∧（存在）","谓词描述属性或关系","域限定讨论范围"],
+ angle:{book:"《人工智能：一种现代的方法》第 8 章",story:"公司权限规则“每个部门都有一个经理”→ ∀d(Department(d)→∃m(Manager(m)∧Manages(m,d)))。"},
+ related:["原子命题","本体论","知识图谱"],ref:"AI培训第一课/第二课",dessert:"格物致知。"},
+{id:"ontology",name:"本体论",emoji:"🍉",ch:0,diff:3,temp:3,attract:8,type:"choice",
+ hook:"一眼认出西瓜，AI 靠什么？",
+ q:"凭黄绿条纹果皮、椭圆、红瓤、黑籽推断“它是西瓜”，这体现了？",
+ opts:["用类别层级组织推理","死记硬背单个特征","直觉猜测","搜索引擎匹配"],ans:0,
+ teaser:"AI 判断对象本质靠“类别”，不靠孤立的特征。",
+ explain:"本体论用类别层次组织世界事物：果皮、大小、形状、果肉、种子层层类别叠加，得出“西瓜”并可推理“可做水果沙拉”。",
+ def:"本体论：用类别层级组织世界事物的理论，是一般知识库的骨架。",
+ points:["类别层级组织世界","大多数推理发生在类别层面","通用本体论仍进展有限","知识图谱是本体论的落地应用"],
+ angle:{book:"《人工智能：一种现代的方法》第 8 章",story:"番茄是红色——但还有黄色和绿色，常识本体要注意例外。"},
+ related:["知识图谱","一阶逻辑","原子化写作"],ref:"AI培训第三课",dessert:"名不正则言不顺。"},
+{id:"kg",name:"知识图谱",emoji:"🕸️",ch:0,diff:3,temp:5,attract:8,type:"judge",
+ hook:"700 亿条事实在给你“传纸条”？",
+ q:"谷歌知识图谱包含超过 700 亿条事实，并为约三分之一的谷歌搜索提供答案。",
+ ans:0,
+ teaser:"这是教材原文的数据——知识图谱早已不是概念，而是每天在用的基础设施。",
+ explain:"谷歌知识图谱结合维基百科半结构化内容与人工整合内容（Dong et al., 2014）。构建知识图谱有四条路：专家构建(CYC)、数据库引入(DBpedia)、文本提取(TextRunner)、大众输入(OpenMind)。",
+ def:"知识图谱：本体论的实际应用，把事实组织成可推理的结构化网络。",
+ points:["四种构建方式：专家/数据库/文本/大众","本体论的落地应用","三元组是基本单元","让 AI 从“检索”走向“推理”"],
+ angle:{book:"《人工智能：一种现代的方法》第 8 章",story:"搜“王鑫康”时，图谱把人物、课程、直播关联成一张网。"},
+ related:["本体论","原子化写作"],ref:"AI培训第三课",dessert:"学而不思则罔。"},
+{id:"atomic-writing",name:"原子化写作",emoji:"✍️",ch:0,diff:2,temp:4,attract:7,type:"choice",
+ hook:"一句话拆成五块，AI 才听得懂。",
+ q:"“Aurora Max 支持 4K 录制且续航 20 小时”——最标准的原子化写法是？",
+ opts:["(Aurora Max, 支持功能, 4K视频录制)","(Aurora Max, 有, 很长的续航)","(Aurora Max, 支持4K录制和续航20小时)","Aurora Max 支持 4K 录制"],ans:0,
+ teaser:"模糊动词“有”是知识库的天敌。",
+ explain:"原子化 = 把知识拆成最小事实单元（三元组），并用精确谓词：“电池续航时间=20小时”优于“有长续航”。模糊谓词会让 AI 无法推理。",
+ def:"原子化写作：将自然语言知识拆解为最小、明确、一致的事实单元（三元组）。",
+ points:["拆到最小事实单元","谓词要精确、建立谓词词典","同一知识保持一致性","从“文档库”转向“知识图谱”"],
+ angle:{book:"《人工智能：一种现代的方法》第 8 章",story:"(高级客服支持, 触发条件, 购买了 Aurora Max)。"},
+ related:["知识图谱","本体论"],ref:"AI培训第一课",dessert:"大道至简。"},
+{id:"sample-space",name:"样本空间",emoji:"🎲",ch:1,diff:2,temp:3,attract:7,type:"choice",
+ hook:"两颗骰子，藏着 36 个世界。",
+ q:"投两个六面骰子，样本空间 Ω 里有多少个可能世界？",
+ opts:["36","12","6","无限多"],ans:0,
+ teaser:"每个可能世界都互斥且穷举——漏掉一个，概率就错。",
+ explain:"样本空间是所有可能世界的集合：6×6=36。查询“和为 6”就是挑出 (3,3)(1,5)(5,1)(2,4)(4,2) 五个世界，概率 = 5/36。",
+ def:"样本空间 Ω：随机事件所有可能结果的集合，元素互斥且穷举。",
+ points:["元素 = 可能世界 ω","互斥且穷举","命题 = 一组世界的集合","命题概率 = 对应世界概率之和"],
+ angle:{book:"《人工智能：一种现代的方法》第 12 章",story:"和为十一的概率 = P(5,6)+P(6,5) = 1/36+1/36 = 1/18。"},
+ related:["先验概率","条件概率","概率密度函数"],ref:"AI学习第七课",dessert:"不积跬步，无以至千里。"},
+{id:"prior",name:"先验概率",emoji:"📜",ch:1,diff:2,temp:4,attract:7,type:"judge",
+ hook:"医生开口前，病早就“有数”了。",
+ q:"先验概率是在没有任何证据信息时，对命题的信念程度。",
+ ans:0,
+ teaser:"先验 = 证据出场前的底牌。",
+ explain:"先验概率（无条件概率）指无任何其他信息下的信念度；证据到来后更新出的叫后验概率。贝叶斯就是用证据把先验更新为后验。",
+ def:"先验概率：无任何其他信息下对命题的信念度。",
+ points:["证据出场前的信念","后验 = 先验 + 证据更新","新证据不能单独被信任","基本率就是常见的先验"],
+ angle:{book:"《人工智能：一种现代的方法》第 12 章",story:"体检前医生先知道“这种病患病率 1%”。"},
+ related:["条件概率","贝叶斯法则","基本率忽略"],ref:"AI学习第七课",dessert:"知己知彼，百战不殆。"},
+{id:"conditional",name:"条件概率",emoji:"🔗",ch:1,diff:3,temp:4,attract:8,type:"choice",
+ hook:"“已知第一个骰子是 5”之后，世界缩小了。",
+ q:"投两骰，已知第一个是 5，两骰点数相同的概率是？",
+ opts:["1/6","1/36","1/2","5/36"],ans:0,
+ teaser:"“给定”是概率世界最强的缩放工具。",
+ explain:"已知第一个是 5，可能世界从 36 个缩到 6 个（(5,1)…(5,6)），其中相同只有 (5,5) 一个，概率 1/6。P(A|B) 中“|”读作“给定”。",
+ def:"条件概率 P(A|B)：给定 B 为真时 A 为真的概率。",
+ points:["“|”读作“给定”","证据缩小可能世界的集合","乘积法则：P(a∧b)=P(b)P(a|b)","条件概率 = 后验概率"],
+ angle:{book:"《人工智能：一种现代的方法》第 12 章",story:"已知对方开豪车，他是富人的概率要重新算。"},
+ related:["先验概率","贝叶斯法则","样本空间"],ref:"AI学习第七课",dessert:"兼听则明，偏信则暗。"},
+{id:"bayes",name:"贝叶斯法则",emoji:"⚖️",ch:1,diff:4,temp:5,attract:10,type:"choice",
+ hook:"检测准确率 99%，你就有 99% 的概率得病？",
+ q:"罕见病患病率 0.1%，试剂准确率 99%（假阳性 1%）。你检测呈阳性，真的得病概率约？",
+ opts:["约 99%","约 90%","约 50%","约 9%"],ans:3,
+ teaser:"直觉想说 99%，但贝叶斯会打脸：真阳性只有 990 人，假阳性却多达 9990 人。",
+ explain:"贝叶斯法则 P(A|B)=P(B|A)·P(A)/P(B)。100 万人检测：真患病 1000 人，检出 990 人；没病的 999000 人误报 9990 人。阳性共 10980 人，真患病 990/10980≈9%。新证据必须结合先验一起判断。",
+ def:"贝叶斯法则：用新证据 B 更新对假设 A 的信念的数学法则 P(A|B)=P(B|A)P(A)/P(B)。",
+ points:["后验 = 似然 × 先验 ÷ 证据","新证据不能单独被信任","忽略基本率是常见认知错误","因果方向的概率比诊断方向更稳健"],
+ angle:{book:"《思考，快与慢》",story:"相亲时看到对方开豪车就认为他有钱，会忽略“有钱人里开豪车的比例”和“开豪车里有钱人的比例”的区别。"},
+ related:["条件概率","先验概率","基本率忽略","合取谬误"],ref:"AI学习第七课/第八课；《人工智能：一种现代的方法》第 12 章",dessert:"千里之行，始于足下。"},
+{id:"conjunction",name:"合取谬误",emoji:"🎾",ch:1,diff:3,temp:5,attract:9,type:"choice",
+ hook:"“输掉首局但赢得比赛”，比“输掉首局”更可能？",
+ q:"博格是网球霸主。下面哪个更可能发生？",
+ opts:["B. 博格将输掉首局","C. 博格输掉首局但最终获胜","两者一样","无法比较"],ans:0,
+ teaser:"细节越多，概率越小——合取永远不大于单个事件。",
+ explain:"P(C)=P(输首局)×P(赢比赛|输首局) ≤ P(输首局)。人爱给故事加细节，觉得“更合理”，其实合取概率只会更低。",
+ def:"合取谬误：认为多个条件同时成立的“更具体的故事”比单个条件更可能。",
+ points:["P(A∧B) ≤ P(A)","细节越多概率越小","连贯的故事 ≠ 真实的故事","代表性直觉的典型陷阱"],
+ angle:{book:"《思考，快与慢》",story:"“琳达是银行出纳且是女权主义者”不可能比“琳达是银行出纳”更可能。"},
+ related:["基本率忽略","贝叶斯法则","先验概率"],ref:"AI学习第七课 游戏2/3",dessert:"尽信书，则不如无书。"},
+{id:"base-rate",name:"基本率忽略",emoji:"🚕",ch:1,diff:4,temp:5,attract:10,type:"choice",
+ hook:"目击者 80% 靠谱，蓝车肇事概率就是 80%？",
+ q:"城市 85% 绿车、15% 蓝车；目击者判断是蓝色，准确率 80%。蓝车肇事概率约？",
+ opts:["约 41%","80%","85%","15%"],ans:0,
+ teaser:"绿车太多，20% 的误判也能淹没真相。",
+ explain:"100 起事故：蓝车 15 辆，正确指认 12 辆；绿车 85 辆，误指蓝 17 辆。所有“蓝色声称”共 29 起，真正蓝车 12/29≈41%。忽略基本率是贝叶斯学习第一课。",
+ def:"基本率忽略：只盯证据准确率，忽视先验基数，导致概率判断严重失真。",
+ points:["先验基数决定后验","准确率 ≠ 患病率/肇事率","贝叶斯把先验拉回来","分母结构稀释证据"],
+ angle:{book:"《思考，快与慢》",story:"检测准确率 99% 但罕见病患病 0.1%，阳性后真患病仅约 9%。"},
+ related:["贝叶斯法则","合取谬误","先验概率"],ref:"AI学习第七课 游戏1；第九课 案例一",dessert:"慎终如始，则无败事。"},
+{id:"pdf",name:"概率密度函数",emoji:"📈",ch:1,diff:3,temp:3,attract:6,type:"judge",
+ hook:"连续世界里，概率是一条曲线。",
+ q:"对连续变量，概率由概率密度函数(pdf)给出，而不是单个点的概率。",
+ ans:0,
+ teaser:"温度是 18.000℃ 的“概率”没意义，区间才有。",
+ explain:"连续变量取值无穷多，单点概率为 0；pdf 给出“落在某小区间的概率 ÷ 区间宽度”。如“中午温度均匀分布在 18~26℃”。",
+ def:"pdf：以 x 为参数的函数，描述连续随机变量的概率分布密度。",
+ points:["单点概率为 0","概率 = 密度 × 区间宽度","随机变量名首字母大写","值域可为有限或无限"],
+ angle:{book:"《人工智能：一种现代的方法》第 12 章",story:"天气预报“降雨概率”本质是对某个区间的积分。"},
+ related:["样本空间","条件概率"],ref:"AI学习第七课",dessert:"千里之堤，溃于蚁穴。"},
+{id:"harsanyi",name:"海萨尼转换",emoji:"🃏",ch:2,diff:4,temp:5,attract:9,type:"reveal",
+ hook:"对手的底牌，让“上帝”来发。",
+ q:"海萨尼转换解决不完全信息博弈的关键一步是？",
+ opts:["引入虚拟“自然”玩家先行动、分配类型","让所有人公开底牌","禁止猜测","增加更多玩家"],ans:0,
+ teaser:"把“我不知道”变成“我知道所有可能性及其概率”。",
+ explain:"“自然”先行动，为每个玩家分配私人类型（收益函数/策略集），玩家只知道自己类型。不完全信息博弈 → 不完美信息博弈，可用标准博弈论工具分析。",
+ def:"海萨尼转换：引入虚拟“自然”玩家分配私人类型，把不完全信息博弈转为不完美信息博弈。",
+ points:["三要素：类型 / 信念 / 海萨尼转换","类型 = 私人收益结构","信念 = 对他人类型的概率分布","转换后可用标准博弈论工具"],
+ angle:{book:"《博弈论与经济行为》",story:"跟风买股票——你看到涨时，消息早已变现，你接的是别人的利润。"},
+ related:["柠檬市场","不完全信息博弈","贝叶斯法则"],ref:"AI学习第四课/第五课；《什么是海萨尼效应》",dessert:"知人者智，自知者明。"},
+{id:"lemon",name:"柠檬市场",emoji:"🍋",ch:2,diff:3,temp:4,attract:9,type:"choice",
+ hook:"二手车市场，最后剩下什么车？",
+ q:"买家只肯出中间价，长期来看二手市场会怎样？",
+ opts:["只剩坏车（逆向选择）","好车越来越多","价格回归合理","车市消失"],ans:0,
+ teaser:"中间价让好车卖家离场，坏车卖家留下。",
+ explain:"买家不知道车的类型，只出介于好车坏车之间的价；好车卖家觉得亏不卖，坏车卖家乐意卖——市场只剩坏车，这就是逆向选择（柠檬市场）。",
+ def:"柠檬市场：信息不对称下，劣质品驱逐优质品的逆向选择现象。",
+ points:["信息不对称是根源","中间价赶走好车","逆向选择 = 劣币驱逐良币","解法：质保 / 信誉评级等信号"],
+ angle:{book:"阿克洛夫《柠檬市场》",story:"招聘市场里低薪赶走高手，也是逆向选择。"},
+ related:["海萨尼转换","不完全信息博弈"],ref:"AI学习第四课/第五课；《什么是海萨尼效应》",dessert:"货比三家不吃亏。"},
+{id:"incomplete-game",name:"不完全信息博弈",emoji:"📉",ch:2,diff:4,temp:4,attract:8,type:"judge",
+ hook:"刷到“某股大涨”时，你已经是最后接棒的人。",
+ q:"跟风买股票是典型的不完全信息博弈——你买入的钱变成了先知先觉者的利润。",
+ ans:0,
+ teaser:"涨的原因，永远比你看到的消息更早。",
+ explain:"先听到消息的人已买入，等你知道时买入的钱变成前手的利润，股价随即下跌。至少一方不知道他方关键信息（收益/策略/类型）的博弈，就是不完全信息博弈。",
+ def:"不完全信息博弈：至少一个参与者不完全了解其他参与者的收益函数、策略或类型的博弈。",
+ points:["类型是私人信息","信念是对类型的概率分布","海萨尼转换是标准解法","现实博弈几乎都是不完全信息"],
+ angle:{book:"《博弈论与经济行为》",story:"直播选品——你不知道对手下一场主推什么，只能按信念分布押注。"},
+ related:["海萨尼转换","柠檬市场","贝叶斯法则"],ref:"AI学习第四课/第五课",dessert:"谋定而后动。"},
+{id:"meu",name:"最大期望效用 MEU",emoji:"🎯",ch:2,diff:3,temp:5,attract:9,type:"choice",
+ hook:"理性的尽头，是一道期望题。",
+ q:"理性智能体应该选择什么样的动作？",
+ opts:["期望效用最大的动作","最安全的动作","收益最高的动作","专家推荐的动作"],ans:0,
+ teaser:"决策论 = 概率论 + 效用理论。",
+ explain:"MEU（最大期望效用原则）：对每个动作，把各结果的概率×效用求和，选期望效用最大的。相信什么（概率）+ 想要什么（效用）= 该做什么（决策）。",
+ def:"MEU：理性智能体选择使其期望效用最大化的动作的原则。",
+ points:["期望效用 = Σ 概率×效用","决策论 = 概率论 + 效用理论","拒绝决策也是一种决策","不确定性下的最优标准"],
+ angle:{book:"《人工智能：一种现代的方法》第 16 章",story:"选品时按“爆款概率 × 利润”打分排序，就是 MEU。"},
+ related:["效用函数","贝叶斯法则","阿莱悖论"],ref:"AI学习第九课",dessert:"两害相权取其轻。"},
+{id:"utility",name:"效用函数",emoji:"💰",ch:2,diff:3,temp:5,attract:9,type:"judge",
+ hook:"第 100 万和第 1 万，快乐不一样重。",
+ q:"效用与货币价值成正比——钱多一倍，效用就多一倍。",
+ ans:1,
+ teaser:"第一个 100 万救命，第二个 100 万锦上添花。",
+ explain:"效用不随货币线性增长，边际效用递减：第一个 100 万效用极高，再一个 100 万效用较小。所以人们拒绝公平赌局——赢得的不如输掉的。",
+ def:"效用函数 U：将结果映射为偏好数值的函数，理性偏好下存在。",
+ points:["效用 ≠ 货币价值","边际效用递减","存在性由偏好公理保证","序数效用只需排序，数值不重要"],
+ angle:{book:"《人工智能：一种现代的方法》第 16 章",story:"存款 2003 元时，那 3 元对 AI 储蓄官毫无效用（整数偏好）。"},
+ related:["最大期望效用 MEU","风险厌恶","阿莱悖论"],ref:"AI学习第九课",dessert:"知足者富。"},
+{id:"risk-aversion",name:"风险厌恶",emoji:"🛡️",ch:2,diff:3,temp:4,attract:8,type:"choice",
+ hook:"明明期望为 0 的赌局，为什么你不玩？",
+ q:"普通人拒绝“50% 赢 100 万 / 50% 输 100 万”的公平赌局，因为？",
+ opts:["损失的痛苦大于收益的快乐（风险厌恶）","数学期望为负","不懂概率","本金不够"],ans:0,
+ teaser:"保险的本质，是用溢价买确定性。",
+ explain:"工薪族效用曲线是凹的：赢 100 万的快乐远小于输 100 万的痛苦，于是支付保费换确定性。保险公司靠大数定律摊平风险，以风险中性赚取溢价。",
+ def:"风险厌恶：确定性收益的效用高于同等期望的赌局，效用曲线为凹。",
+ points:["凹曲线 = 风险厌恶","凸曲线（绝望区）= 风险寻求","小额相对巨富近似风险中性","保险 = 风险厌恶者向风险中性者买确定性"],
+ angle:{book:"《人工智能：一种现代的方法》第 16 章",story:"负债 1000 万的人反而更敢赌——绝望区效用曲线反转。"},
+ related:["效用函数","最大期望效用 MEU","乐观者诅咒"],ref:"AI学习第九课",dessert:"未雨绸缪。"},
+{id:"allais",name:"阿莱悖论",emoji:"🎰",ch:2,diff:4,temp:4,attract:7,type:"choice",
+ hook:"稳拿 3000，还是搏 80% 的 4000？",
+ q:"阿莱悖论中多数人选“100% 拿 3000”而非“80% 拿 4000”，暴露了什么？",
+ opts:["确定性效应：人对确定收益过度偏好","期望计算错误","4000 太多","风险中性"],ans:0,
+ teaser:"人不是期望效用机器——“可预见地非理性”。",
+ explain:"按期望：0.8×4000=3200 > 3000，理性应选赌局，但多数人拿确定的 3000。人类系统性偏离期望效用，被称为确定性效应 / 阿莱悖论。",
+ def:"阿莱悖论：人类偏好系统性地违背期望效用理论（确定性效应）。",
+ points:["确定性被高估","描述性理论 ≠ 规范性理论","人类“可预见地非理性”","营销中“稳赚”比“高赔率”更能打动人"],
+ angle:{book:"《人工智能：一种现代的方法》第 16 章",story:"直播间“保底价”话术正是利用确定性效应。"},
+ related:["最大期望效用 MEU","效用函数","风险厌恶"],ref:"AI学习第九课",dessert:"观今宜鉴古。"},
+{id:"optimist-curse",name:"乐观者诅咒",emoji:"🌞",ch:2,diff:3,temp:4,attract:8,type:"judge",
+ hook:"中标那一刻，往往就是亏本的开始。",
+ q:"乐观者诅咒(optimizer's curse)源于乐观偏差导致的估计偏差，可用贝叶斯公式修正。",
+ ans:0,
+ teaser:"你赢下竞标，可能只是因为你高估得最狠。",
+ explain:"多方竞价时，出价最高者往往是最乐观（估计偏差最大）的人——赢家反而吃亏。用贝叶斯把先验拉回来：P(B) 低时别被乐观的证据冲昏头。",
+ def:"乐观者诅咒：在多方选择中，赢家通常是对价值估计最乐观的人。",
+ points:["赢家 = 最乐观的估计者","乐观偏差 = 正偏差","贝叶斯公式可修正","投标 / 选品都要防“赢家诅咒”"],
+ angle:{book:"《人工智能：一种现代的方法》第 16 章",story:"直播间抢热门投放位，出价最高的未必是最赚的。"},
+ related:["贝叶斯法则","最大期望效用 MEU","风险厌恶"],ref:"AI学习第九课",dessert:"骄兵必败。"},
+{id:"classical-planning",name:"经典规划",emoji:"🧱",ch:3,diff:3,temp:3,attract:7,type:"choice",
+ hook:"积木世界里，一切尽在掌握。",
+ q:"经典规划的核心假设是什么？",
+ opts:["完全可观测 + 确定性 + 静态 + 离散","环境随机变化","智能体什么都看不见","多智能体混战"],ans:0,
+ teaser:"经典 = 理想国：看得全、算得准、世界不动。",
+ explain:"经典规划假设完全可观测、动作确定性、世界静态、时间离散、单一智能体，在状态空间中搜索从初始态到目标的动作序列（STRIPS / Graphplan / SATPlan）。",
+ def:"经典规划：在完全已知、确定、静态环境中寻找达成目标的动作序列。",
+ points:["四大要素：初始状态/目标/动作/状态空间","动作 = 前提 + 效果","五大理想化假设","积木世界是经典例子"],
+ angle:{book:"《人工智能：一种现代的方法》第 10 章",story:"直播排品脚本 = 从“开场”到“逼单”的动作序列。"},
+ related:["信念状态","一致性规划","在线重规划"],ref:"AI学习第四课",dessert:"凡事预则立。"},
+{id:"belief-state",name:"信念状态",emoji:"🔦",ch:3,diff:3,temp:5,attract:9,type:"reveal",
+ hook:"漆黑房间里，你“认为”自己在哪？",
+ q:"无传感器下，向右移动三次后，你确定自己站在哪？",
+ opts:["门口（信念状态收敛为{4}）","还在原地","位置 2 或 3","无法判断"],ans:0,
+ teaser:"看不见，就用“可能位置的集合”推理。",
+ explain:"初始信念 {1,2,3,4}；右移一次 {2,3,4}；两次 {3,4}；三次 {4}=目标。信念状态 = 智能体认为自己可能处于的状态集合，行动与观测不断更新它。",
+ def:"信念状态：智能体对自己可能所处状态的集合（或概率分布）。",
+ points:["看不见时的推理基础","行动让信念演化","观测让信念收敛","一致性规划靠它保证达标"],
+ angle:{book:"《人工智能：一种现代的方法》第 11 章",story:"侦探靠“脚步声在东翼”把嫌疑范围从 5 个房间缩到 2 个。"},
+ related:["一致性规划","POMDP","经典规划"],ref:"AI学习第四课",dessert:"灯下黑，需明察。"},
+{id:"conformant",name:"一致性规划",emoji:"📋",ch:3,diff:3,temp:4,attract:8,type:"judge",
+ hook:"闭着眼，也能走到门口的计划。",
+ q:"一致性规划 ≈ SOP：无论初始状态如何，动作序列都保证达成目标。",
+ ans:0,
+ teaser:"笨办法，但最可靠——标准作业手册就是它。",
+ explain:"一致性规划找到的动作序列，无论起点在哪都保证达成目标（如三次右移必到门口）。人员仅靠 SOP 即可实现一致行动。",
+ def:"一致性规划：无论初始状态如何都能保证达成目标的动作序列。",
+ points:["关键词：无论初始状态 + 保证达成","等于给“盲人”的 SOP","信念状态跟踪是核心","与 POMDP 互补：不考虑概率"],
+ angle:{book:"《人工智能：一种现代的方法》第 11 章",story:"直播间开播检查清单——无论谁值班，按清单走就不会漏。"},
+ related:["信念状态","POMDP","经典规划"],ref:"AI学习第四课/第五课",dessert:"不以规矩，不能成方圆。"},
+{id:"pomdp",name:"POMDP",emoji:"🌫️",ch:3,diff:4,temp:5,attract:9,type:"choice",
+ hook:"迷雾地图上，策略该跟着什么走？",
+ q:"在 POMDP 框架中，策略 π 把什么映射为动作？",
+ opts:["信念状态","真实状态","观测值","历史收益"],ans:0,
+ teaser:"你不知道真实状态，只能指挥你的“概率热力图”。",
+ explain:"部分可观测马尔可夫决策过程：智能体永远看不到真实状态 S，只能靠观测 O 更新信念状态（概率分布），策略 π: 信念→动作。这是“看不清 + 世界会变”下最强大的数学模型。",
+ def:"POMDP：部分可观测马尔可夫决策过程，用信念状态管理不确定性的统一框架。",
+ points:["真实状态不可见","观测模糊不可全信","信念 = 状态的概率热力图","π：信念状态 → 动作"],
+ angle:{book:"《人工智能：一种现代的方法》第 17 章",story:"新品上市——A/B 测试与访谈是观测，按反馈把主推从功能 A 转向功能 B。"},
+ related:["信念状态","一致性规划","在线重规划"],ref:"AI学习第四课/第五课",dessert:"摸着石头过河。"},
+{id:"replan",name:"在线重规划",emoji:"🧭",ch:3,diff:3,temp:5,attract:9,type:"judge",
+ hook:"导航的“已为您重新规划路线”。",
+ q:"未知环境中边走边感知、发现断路立即改道，属于在线规划与重规划。",
+ ans:0,
+ teaser:"计划不是出发前写死的，而是边走边改的。",
+ explain:"初始计划只是“先动起来”的猜测；执行中感知环境（施工封路、电梯刷卡），持续重规划直到到达目标。D* Lite 等算法专为动态环境设计。",
+ def:"在线重规划：在未知/变化环境中，边执行边感知边重新规划的方法。",
+ points:["初始计划只是启动器","感知 → 发现差异 → 重规划","反应性 + 前瞻性","探索与利用的权衡"],
+ angle:{book:"《人工智能：一种现代的方法》",story:"直播中话术实时调整——在线人数跌了就换钩子，就是直播版重规划。"},
+ related:["POMDP","信念状态","经典规划"],ref:"AI学习第五课",dessert:"穷则变，变则通。"},
+{id:"system12",name:"系统1 / 系统2",emoji:"⚡",ch:4,diff:2,temp:5,attract:9,type:"choice",
+ hook:"2+2=？你根本来不及“思考”。",
+ q:"“2+2=？”的答案主要由哪个系统给出？",
+ opts:["系统1（快、自动、不费力）","系统2（慢、费力的深思）","两者各一半","记忆系统"],ans:0,
+ teaser:"填报销单才是系统 2 的活儿。",
+ explain:"系统 1 快速自动（2+2、听声转头、读大字广告牌），系统 2 缓慢费力（填报销单、狭窄空间停车、对比两部手机）。直觉交给 1，复杂推理交给 2。",
+ def:"双系统：系统 1 快速直觉自动，系统 2 缓慢理性费力。",
+ points:["系统1：自动、省力、易偏差","系统2：专注、费力、需自控","认知轻松让系统 1 上线","启发式 = 系统 1 的捷径"],
+ angle:{book:"《思考，快与慢》",story:"看到“99% 准确率”系统 1 直接恐慌，系统 2 才会去算贝叶斯。"},
+ related:["基本率忽略","合取谬误","后见之明"],ref:"AI学习第八课",dessert:"三思而后行。"},
+{id:"hindsight",name:"后见之明",emoji:"🔮",ch:4,diff:2,temp:4,attract:8,type:"judge",
+ hook:"“我早就知道会这样！”",
+ q:"后见之明偏差：结果发生后，人们高估自己事前预测的能力。",
+ ans:0,
+ teaser:"事前没人知道，事后人人都是预言家。",
+ explain:"结果出来后，人会把过去事件“标签化”理解，产生“我早就知道”的错觉。后果越严重，马后炮越明显；企业兴衰故事正是靠叙事谬误制造理解错觉。",
+ def:"后见之明：事件发生后高估自己事前可预测性的认知偏差。",
+ points:["结果好 ≠ 决定聪明","叙事谬误忽略运气与回归","马后炮随后果严重性增强","《基业长青》公司回报率与对照组几乎无异"],
+ angle:{book:"《思考，快与慢》",story:"《财富》过去 20 年评级最差的公司股票回报反而高于最受推崇的公司。"},
+ related:["系统1 / 系统2","合取谬误","乐观者诅咒"],ref:"AI学习第九课",dessert:"事后诸葛易，事前孔明难。"},
+{id:"qaly",name:"QALY",emoji:"⚕️",ch:4,diff:3,temp:4,attract:8,type:"choice",
+ hook:"两年透析 vs 一年健康，病人怎么选？",
+ q:"两年透析（质量系数 0.5）和一年完全健康（系数 1）相比？",
+ opts:["QALY 相等，都是 1","透析更好，活得久","健康更好，系数高","无法比较"],ans:0,
+ teaser:"生命质量 × 年数，才是健康经济学真正的“币”。",
+ explain:"QALY = 年数 × 质量系数：2×0.5=1，1×1=1。病人宁可短而高质量。医疗资源按 QALY 排序：100 万投心脏病得 200 QALY，投慢性背痛得 9000 QALY。",
+ def:"QALY：质量调整生命年 = 生存年数 × 生命质量系数。",
+ points:["QALY = 年数 × 质量系数","用于医疗资源配置","微亡 = 百万分之一死亡概率","效用评估需要偏好启发"],
+ angle:{book:"《人工智能：一种现代的方法》第 16 章",story:"新药让透析质量 0.5→0.8，10 年多赚 3 个 QALY，医保按此定价。"},
+ related:["效用函数","最大期望效用 MEU","风险厌恶"],ref:"AI学习第九课",dessert:"留得青山在，不怕没柴烧。"}
+];
+const BYID = {}; CONCEPTS.forEach(c => BYID[c.id] = c);
+/* ══════════ 状态 ══════════ */
+const memStore = {};
+const store = {
+  get(k, d){ try { const v = JSON.parse(localStorage.getItem(k)); return (v === null || v === undefined) ? d : v; } catch(e){ return (k in memStore) ? memStore[k] : d; } },
+  set(k, v){ memStore[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){ /* 本地存储不可用时仅内存保留 */ } }
+};
+let learned = store.get("acc.learned", {});   // id -> "YYYY-MM-DD"
+let clicks  = store.get("acc.clicks", {});
+let done    = store.get("acc.done", {});
+let view = { tab: "home", detail: null };
+function todayStr(d){ d = d || new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function dayOfYear(){ const n = new Date(); return Math.floor((n - new Date(n.getFullYear(),0,0)) / 86400000); }
+function el(html){ const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; }
+const app = document.getElementById("app");
+const toastEl = document.getElementById("toast");
+let toastTimer = null;
+function toast(msg){ toastEl.textContent = msg; toastEl.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove("show"), 2600); }
+/* ══════════ 首页：兴趣卡信息流（游戏先行） ══════════ */
+function metaHtml(c){ return `<div class="meta"><b>${CHAPTERS[c.ch]}</b> · 难度 ${"★".repeat(c.diff)} · 热度 ${"🔥".repeat(c.temp)} · 吸引力 ${c.attract}</div>`; }
+function cardHtml(c, featured){
+  const isDone = !!learned[c.id];
+  return `<div class="card ${featured?"featured":""}" data-id="${c.id}">
+    ${featured?'<span class="flag">今日挑战</span>':''}
+    <div class="hook">${c.hook}</div>
+    <div class="q">${c.q}</div>
+    <div class="teaser">${c.teaser}</div>
+    <div class="tags"><span class="chip gold">${CHAPTERS[c.ch]}</span><span class="chip minor">${c.emoji} ${c.name}</span></div>
+    <div class="row">${metaHtml(c)}
+      ${isDone ? '<span class="done-badge">✓ 已学习</span>' : '<button class="btn-cta" data-open="'+c.id+'">开始学习</button>'}
+    </div>
+  </div>`;
+}
+function renderHome(filter){
+  const totalClicks = Object.values(clicks).reduce((a,b)=>a+b,0);
+  const totalDone = Object.values(done).reduce((a,b)=>a+b,0);
+  const head = `<header class="top">
+    <div class="brand">AI 概念学习卡<small>复古未来主义壁画 · 游戏先行</small></div>
+    <div class="stats">后台数据<br>点击 ${totalClicks} · 完成 ${totalDone}</div>
+  </header>`;
+  const top5 = CONCEPTS.slice().sort((a,b)=>b.attract-a.attract).slice(0,5);
+  const feat = top5[dayOfYear() % top5.length];
+  const list = CONCEPTS.filter(c => !filter || c.ch === filter).sort((a,b)=>b.attract-a.attract);
+  const chips = `<div class="filters"><button class="f-chip ${!filter?"on":""}" data-f="">全部</button>` +
+    CHAPTERS.map((ch,i)=>`<button class="f-chip ${filter===i?"on":""}" data-f="${i}">${ch}</button>`).join("") + `</div>`;
+  app.innerHTML = head + cardHtml(feat, true) + chips +
+    `<div class="sec-title">无序探索 · 按吸引力排序</div>` +
+    (list.length ? list.map(c=>cardHtml(c,false)).join("") : `<div class="empty">本章节暂无概念</div>`);
+}
+/* ══════════ 游戏区块（judge / choice / reveal） ══════════ */
+function gameHtml(c){
+  const solved = (view.solved && view.solved[c.id]);
+  let g = "";
+  if (c.type === "judge"){
+    g = `<div class="q">${c.q}</div>
+      <div class="judge-row">
+        <button class="j-btn j-yes" data-ans="0" ${solved?"disabled":""}>✓ 对</button>
+        <button class="j-btn j-no" data-ans="1" ${solved?"disabled":""}>✗ 错</button>
+      </div>`;
+  } else if (c.type === "reveal"){
+    g = `<div class="flip-wrap"><div class="flip" data-flip>
+        <div class="face front">🃏<br>点击翻开题目</div>
+        <div class="face back">${c.q}</div>
+      </div></div>
+      <div class="opts" style="${solved?"":"display:none"}">${optsHtml(c, solved)}</div>`;
+  } else {
+    g = `<div class="q">${c.q}</div><div class="opts">${optsHtml(c, solved)}</div>`;
+  }
+  return `<div class="block"><h3><span class="num">01</span>今日挑战</h3>${g}
+    <div class="feedback" data-fb></div>
+    <div class="explain ${solved?"show":""}" data-exp>${c.explain}</div>
+  </div>`;
+}
+function optsHtml(c, solved){
+  return c.opts.map((o,i)=>{
+    let cls = "";
+    if (solved){
+      if (i === c.ans) cls = " correct";
+      else if (i === view.picked[c.id]) cls = " wrong";
+    }
+    return `<button class="opt${cls}" data-pick="${i}" ${solved?"disabled":""}>${o}</button>`;
+  }).join("");
+}
+function answer(c, i){
+  view.picked[c.id] = i;
+  const ok = (i === c.ans);
+  view.solved[c.id] = true;
+  const card = app.querySelector(`[data-id="${c.id}"]`);
+  const opts = card ? card.querySelectorAll(".opt") : app.querySelectorAll(".opt");
+  opts.forEach((o,idx)=>{ o.disabled = true; if (idx === c.ans) o.classList.add("correct"); else if (idx === i) o.classList.add("wrong"); });
+  const fb = app.querySelector("[data-fb]"); if (fb){ fb.textContent = ok ? "✓ 回答正确" : "✗ 再想想——看看解析"; fb.className = "feedback " + (ok?"ok":"no"); }
+  const ex = app.querySelector("[data-exp]"); if (ex) ex.classList.add("show");
+}
+/* ══════════ 详情页：概念详情 01-07 ══════════ */
+function renderDetail(id){
+  const c = BYID[id]; if (!c) { renderHome(); return; }
+  const isDone = !!learned[c.id];
+  const rel = c.related.map(r=>{
+    const t = CONCEPTS.find(x=>x.name === r);
+    return t ? `<button class="rel-tag" data-open="${t.id}">${t.emoji} ${r}</button>` : `<span class="rel-tag">${r}</span>`;
+  }).join(" ");
+  app.innerHTML = `
+    <button class="back" data-back>← 返回学习探索</button>
+    <div class="tags"><span class="chip gold">${CHAPTERS[c.ch]}</span><span class="chip minor">难度 ${"★".repeat(c.diff)}</span><span class="chip minor">热度 ${"🔥".repeat(c.temp)}</span></div>
+    <h1 class="name">${c.emoji} ${c.name}</h1>
+    <div class="sub">继续阅读，你会学到：${c.hook}</div>
+    <div data-id="${c.id}">${gameHtml(c)}</div>
+    <div class="block"><h3><span class="num">02</span>核心概念</h3>
+      <div class="sub" style="margin:0 0 6px">${CHAPTERS[c.ch]} · 难度 ${"★".repeat(c.diff)} · ${c.emoji} ${c.name}</div>
+      <div class="def">${c.def}</div></div>
+    <div class="dessert"><b>甜点 1 · 哲思谚语</b>　${c.dessert}</div>
+    <div class="block"><h3><span class="num">03</span>核心定义</h3><div class="def">${c.def}</div></div>
+    <div class="block"><h3><span class="num">04</span>核心要点</h3>${c.points.map(p=>`<div class="point">${p}</div>`).join("")}</div>
+    <div class="dessert"><b>甜点 2</b>　“AI 直觉正在形成”</div>
+    <div class="block"><h3><span class="num">05</span>换个角度理解</h3>
+      <div class="angle"><b>生活例子：</b>${c.angle.story}</div>
+      <div class="angle" style="margin-top:6px"><b>参考书：</b>${c.angle.book}</div></div>
+    <div class="block"><h3><span class="num">06</span>关联概念</h3><div class="tags">${rel}</div></div>
+    <div class="block"><h3><span class="num">07</span>来源引用</h3><div class="ref">${c.ref}</div></div>
+    <div class="complete-wrap">
+      <button class="btn-complete" data-complete="${c.id}" ${isDone?"disabled":""}>${isDone ? "✓ 已完成学习" : "完成学习 ✓ · 打卡"}</button>
+    </div>`;
+  window.scrollTo(0,0);
+}
+/* ══════════ 日积月累页 ══════════ */
+function dates(){ return Object.values(learned).filter(Boolean).sort(); }
+function streakInfo(){
+  const set = new Set(dates()); if (!set.size) return {cur:0, longest:0};
+  let longest = 0, run = 0, prev = null;
+  for (const d of set){
+    const t = new Date(d + "T00:00:00").getTime();
+    if (prev !== null && t - prev === 86400000) run++; else run = 1;
+    if (run > longest) longest = run;
+    prev = t;
+  }
+  const today = new Date(); let end = today;
+  if (!set.has(todayStr(today))) { end = new Date(today.getTime() - 86400000); if (!set.has(todayStr(end))) return {cur:0, longest}; }
+  let cur = 0, t = end;
+  while (set.has(todayStr(t))) { cur++; t = new Date(t.getTime() - 86400000); }
+  return {cur, longest};
+}
+function cheer(){
+  const ds = dates(); const st = streakInfo(); const today = todayStr();
+  let t1, t2;
+  if (!ds.length){ t1 = "万里之行，始于足下"; t2 = "今天的第一个游戏正在等你。"; }
+  else {
+    const last = new Date(ds[ds.length-1] + "T00:00:00").getTime();
+    const gap = Math.floor((new Date(today + "T00:00:00").getTime() - last) / 86400000);
+    if (st.cur >= 7){ t1 = "连续 " + st.cur + " 天点亮星火"; t2 = "AI 直觉已经生根发芽，继续保持。"; }
+    else if (st.cur >= 1 && st.cur <= 3){ t1 = "连续学习第 " + st.cur + " 天"; t2 = "保持节奏，直觉正在形成。"; }
+    else if (gap > 7){ t1 = "好久不见"; t2 = "敦煌的星火还在等你点亮，回来吧。"; }
+    else if (gap >= 1 && gap <= 3){ t1 = "隔日重逢，正好巩固"; t2 = "温故而知新，来吧。"; }
+    else { t1 = "今天也是积累概念的一天"; t2 = "选一个最吸引你的游戏开始。"; }
+  }
+  return `<div class="cheer"><div class="t1">${t1}</div><div class="t2">${t2}</div></div>`;
+}
+function renderCalendar(){
+  const ds = dates(); const st = streakInfo();
+  const now = new Date(); const y = now.getFullYear(), m = now.getMonth();
+  const monthCount = ds.filter(d => d.startsWith(y + "-" + String(m+1).padStart(2,"0"))).length;
+  const first = new Date(y, m, 1); const daysInMonth = new Date(y, m+1, 0).getDate();
+  const startDow = (first.getDay() + 6) % 7; // 周一开头
+  let cells = "";
+  for (let i = 0; i < startDow; i++) cells += `<div class="cell"></div>`;
+  for (let d = 1; d <= daysInMonth; d++){
+    const ds2 = y + "-" + String(m+1).padStart(2,"0") + "-" + String(d).padStart(2,"0");
+    const rec = Object.entries(learned).find(([,v])=>v===ds2);
+    const cls = "cell" + (rec ? " learned" : "") + (ds2 === todayStr() ? " today" : "");
+    cells += rec
+      ? `<div class="${cls}"><span class="dnum">${d}</span>${BYID[rec[0]] ? BYID[rec[0]].emoji : "✨"}</div>`
+      : `<div class="${cls}">${d}</div>`;
+  }
+  const wall = Object.keys(learned).map(id => {
+    const c = BYID[id]; if (!c) return "";
+    return `<div class="badge"><div class="e">${c.emoji}</div><div class="n">${c.name}</div>
+      <div class="d">${CHAPTERS[c.ch]} · 难度 ${"★".repeat(c.diff)} · 热度 ${"🔥".repeat(c.temp)}</div></div>`;
+  }).join("");
+  const timeline = ds.map(d => {
+    const rec = Object.entries(learned).find(([,v])=>v===d);
+    const c = rec && BYID[rec[0]];
+    return `<div class="t-item"><div class="d">${d}</div><div class="n">${c ? c.emoji + " " + c.name : "概念"}</div></div>`;
+  }).join("");
+  app.innerHTML = `
+    ${cheer()}
+    <div class="stat-grid">
+      <div class="stat"><div class="v">${monthCount}</div><div class="k">本月打卡</div></div>
+      <div class="stat"><div class="v">${st.cur}</div><div class="k">连续天数</div></div>
+      <div class="stat"><div class="v">${st.longest}</div><div class="k">最长连续</div></div>
+    </div>
+    <div class="cal-head"><span class="m">${y} 年 ${m+1} 月</span><span class="chip gold" style="font-size:11px">敦煌金色徽章</span></div>
+    <div class="cal-grid">${["一","二","三","四","五","六","日"].map(d=>`<div class="dow">${d}</div>`).join("")}${cells}</div>
+    <div class="sec-title">飞天徽章墙</div>
+    ${wall ? `<div class="wall">${wall}</div>` : `<div class="empty">还没有点亮任何概念<br>回到学习探索，完成第一个游戏吧</div>`}
+    <div class="sec-title">学习脉络</div>
+    ${timeline ? `<div class="timeline">${timeline}</div>` : `<div class="empty">时间轴等待你的第一次打卡</div>`}
+    <div class="stats" style="text-align:center;padding:16px 0 4px">后台记录：点击 ${Object.values(clicks).reduce((a,b)=>a+b,0)} 次 · 完成学习 ${Object.values(done).reduce((a,b)=>a+b,0)} 次</div>`;
+}
+/* ══════════ 渲染与事件 ══════════ */
+function render(){
+  document.querySelectorAll("#tabbar .tab").forEach(t=>{
+    t.classList.toggle("on", t.dataset.tab === view.tab);
+  });
+  if (view.tab === "cal") renderCalendar(); else renderHome(view.filter);
+}
+function completeLearn(id){
+  learned[id] = todayStr();
+  done[id] = (done[id] || 0) + 1;
+  store.set("acc.learned", learned); store.set("acc.done", done);
+  toast("甜点 3 · 恭喜，你又点亮了一颗 AI 星 ✨");
+  view.detail = null;
+  setTimeout(()=>{ view.tab = "home"; render(); }, 600);
+}
+app.addEventListener("click", e => {
+  const open = e.target.closest("[data-open]");
+  if (open){ const id = open.dataset.open; clicks[id] = (clicks[id]||0)+1; store.set("acc.clicks", clicks); view.detail = id; renderDetail(id); return; }
+  const back = e.target.closest("[data-back]");
+  if (back){ view.detail = null; render(); window.scrollTo(0,0); return; }
+  const pick = e.target.closest("[data-pick]");
+  if (pick){ const c = BYID[view.detail]; if (c && !view.solved[c.id]) answer(c, +pick.dataset.pick); return; }
+  const jbtn = e.target.closest(".j-btn");
+  if (jbtn){ const c = BYID[view.detail]; if (c && !view.solved[c.id]) answer(c, +jbtn.dataset.ans); return; }
+  const flip = e.target.closest("[data-flip]");
+  if (flip){ flip.classList.add("open"); const optsBox = flip.parentElement.nextElementSibling; if (optsBox) optsBox.style.display = "block"; return; }
+  const complete = e.target.closest("[data-complete]");
+  if (complete){ completeLearn(complete.dataset.complete); return; }
+  const fchip = e.target.closest("[data-f]");
+  if (fchip){ view.filter = (fchip.dataset.f === "") ? null : +fchip.dataset.f; renderHome(view.filter); return; }
+});
+document.getElementById("tabbar").addEventListener("click", e => {
+  const tab = e.target.closest(".tab");
+  if (tab){ view.tab = tab.dataset.tab; view.detail = null; render(); window.scrollTo(0,0); }
+});
+/* 启动 */
+view.solved = {}; view.picked = {};
+render();
+var __eb = document.getElementById('errbar'); if (__eb) __eb.style.display = 'none';
+</script>
+</body>
+</html>
