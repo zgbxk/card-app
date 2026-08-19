@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 概念学习卡 · 扫码学习</title>
+<style>
+:root{ --bg:#1a0e07; --card:#2a1a0e; --l1:#fff5e6; --aux:#e8c590; --minor:#c4a878; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  min-height:100vh;color:#f0e0c8;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:linear-gradient(168deg,#2e1c0a 0%,#3d2812 12%,#351f0e 25%,#281608 38%,#1e1208 50%,#241608 62%,#2a1a0a 75%,#1a0e07 88%,#221208 100%);
+  background-attachment:fixed;position:relative;overflow:hidden;
+}
+.sun{position:fixed;top:-110px;right:-80px;width:380px;height:380px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 40% 40%,rgba(240,192,96,0.35),rgba(240,192,96,0.12) 55%,transparent 70%)}
+.ribbon{position:fixed;top:60px;left:-40px;width:240px;height:60px;opacity:0.18;pointer-events:none;
+  background:linear-gradient(115deg,transparent 20%,rgba(245,180,80,0.9) 38%,rgba(232,197,144,0.9) 50%,rgba(245,180,80,0.9) 62%,transparent 80%);
+  border-radius:60% 40% 60% 40%/80% 60% 80% 60%;transform:rotate(-8deg)}
+.box{position:relative;z-index:1;max-width:420px;width:100%;text-align:center;
+  background:linear-gradient(160deg,var(--card),#241508);border:1px solid rgba(245,180,80,0.25);
+  border-radius:22px;padding:34px 28px 30px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.emoji{font-size:44px}
+h1{font-size:26px;font-weight:700;color:var(--l1);text-shadow:0 2px 12px rgba(240,192,96,0.4),0 1px 2px #000;margin:10px 0 6px}
+.sub{font-size:13px;color:var(--aux);letter-spacing:1px}
+.qr{width:240px;height:240px;margin:22px auto 14px;background:#fff8ee;border-radius:16px;padding:10px;border:1px solid rgba(245,180,80,0.4)}
+.qr img{width:100%;height:100%;display:block}
+.tip{font-size:15px;color:#f0e0c8;font-weight:600}
+.url{font-size:12px;color:var(--minor);margin-top:10px;word-break:break-all;line-height:1.6}
+.note{font-size:11px;color:var(--minor);margin-top:14px;opacity:0.8}
+</style>
+</head>
+<body>
+<div class="sun"></div><div class="ribbon"></div>
+<div class="box">
+  <div class="emoji">🧭🏮</div>
+  <h1>AI 概念学习卡</h1>
+  <div class="sub">复古未来主义壁画 · 游戏先行 · 每日一概念</div>
+  <div class="qr"><img src="qr.png" alt="AI概念学习卡二维码"></div>
+  <div class="tip">📱 手机扫码，立即开始学习</div>
+  <div class="url">https://zgbxk.github.io/card-app/</div>
+  <div class="note">无需下载安装 · 浏览器打开即用 · 5 章节 28 概念</div>
+</div>
+</body>
+</html>
