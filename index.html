@@ -92,6 +92,15 @@ h1.name{font-size:26px;font-weight:700;color:var(--l1);text-shadow:0 2px 12px rg
 .block.limit h3{color:var(--warn)}
 .block.nextstop{border-color:rgba(74,222,128,0.32)}
 .block.nextstop h3{color:var(--ok)}
+.pathbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 12px}
+.pbtn{font-size:12px;color:var(--cta);background:rgba(42,26,10,0.85);border:1px solid rgba(140,200,255,0.35);border-radius:10px;padding:7px 12px}
+.pbtn.off{color:var(--minor);border-color:rgba(196,168,120,0.25);opacity:0.7}
+.pathbar .mid{font-size:12px;color:var(--aux);font-weight:600}
+.gloss-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gterm{background:rgba(26,14,7,0.5);border:1px solid rgba(232,197,144,0.18);border-radius:10px;padding:9px 10px}
+.gterm b{color:var(--l1);font-size:13px}
+.gterm span{display:block;font-size:12px;color:var(--body);margin-top:4px;line-height:1.65}
+@media (max-width:380px){.gloss-grid{grid-template-columns:1fr}}
 .point{display:flex;gap:8px;font-size:14px;line-height:1.7;color:var(--body);margin:6px 0}
 .point::before{content:"◆";color:var(--gold-line);font-size:10px;margin-top:6px}
 .def{font-size:14px;line-height:1.8;color:var(--body)}
@@ -569,6 +578,39 @@ qaly:{guide:"两年透析（生命质量系数 0.5）和一年完全健康（系
  limit:"QALY 把生命的价值量化，必然引发伦理争议：给健康“定价”这件事永远有人反对——工具是冷的，人心是热的。",
  next:"", nextText:"课程闭环——五章 28 个概念已全部点亮！带上这套直觉回到你的直播间与工作台，下一轮学习，从你自己的数据里继续生长。"}
 };
+/* ══════════ 学习路线（由浅入深，第 N/28 课） ══════════ */
+const ORDER = ["atom","fol","ontology","kg","atomic-writing","sample-space","prior","conditional","bayes","conjunction","base-rate","pdf","harsanyi","lemon","incomplete-game","meu","utility","risk-aversion","allais","optimist-curse","classical-planning","belief-state","conformant","pomdp","replan","system12","hindsight","qaly"];
+/* ══════════ 术语拆解（每个概念页的专有词汇，全部大白话） ══════════ */
+const GLOSS = {
+atom:[{t:"命题",d:"能判断“对还是错”的陈述句，比如“今天下雨”。"},{t:"联结词",d:"把命题连起来的符号：非/且/或/如果…那么。"},{t:"真假值",d:"一句话到底是对还是错。"}],
+fol:[{t:"对象",d:"被描述的东西：一个人、一家公司、一本书。"},{t:"谓词",d:"对象的属性或关系，比如“喜欢”“属于”。"},{t:"量词",d:"∀ 表示“所有”，∃ 表示“存在至少一个”。"},{t:"变量",d:"x、y 这类占位符，代表某个对象。"}],
+ontology:[{t:"类别",d:"一类事物的共同标签，比如“水果”“车辆”。"},{t:"层级",d:"大类套小类的树状结构：水果→瓜类→西瓜。"},{t:"本体",d:"对世界事物的分类体系，知识库的骨架。"}],
+kg:[{t:"实体",d:"图谱里的节点：一个人、一个地方、一件事。"},{t:"关系",d:"节点之间的连线，比如“工作于”“生于”。"},{t:"三元组",d:"主体-谓词-客体，图谱的最小事实单元。"}],
+"atomic-writing":[{t:"事实单元",d:"不可再拆的最小知识，一句话只说一件事。"},{t:"三元组",d:"主语-谓语-宾语，如(Aurora Max, 续航, 20小时)。"},{t:"谓词词典",d:"统一用词表，防止“有/是/好”这类模糊说法。"}],
+"sample-space":[{t:"样本空间",d:"所有可能结果的集合，一个都不能漏。"},{t:"事件",d:"某些结果的集合，比如“点数和为 6”。"},{t:"互斥",d:"两个结果不可能同时发生。"},{t:"穷举",d:"把所有可能性都列完整。"}],
+prior:[{t:"先验",d:"看到新证据之前的判断，来自经验和统计。"},{t:"证据",d:"新到手的信息或线索，比如化验单。"},{t:"信念",d:"你认为一件事“有多大可能”的程度。"},{t:"后验",d:"用证据更新先验之后的新判断。"}],
+conditional:[{t:"条件",d:"已经知道的前提，比如“第一个骰子是 5”。"},{t:"给定",d:"竖线“|”的意思，读作“在…的前提下”。"},{t:"乘积法则",d:"两件事同时发生的概率 = 一件 × 另一件在它发生后的概率。"}],
+bayes:[{t:"似然",d:"假设成立时，出现这个证据的概率。"},{t:"基本率",d:"这件事本身有多普遍，比如患病率。"},{t:"后验",d:"拿到证据后更新出来的新信念。"},{t:"更新信念",d:"用新信息修正旧判断的过程。"}],
+conjunction:[{t:"合取",d:"两件事同时成立，概率只会更小。"},{t:"概率相乘",d:"合取概率 = 单个概率的乘积（小于其中任何一个）。"},{t:"代表性",d:"凭“像不像典型”下判断的直觉。"}],
+"base-rate":[{t:"基本率",d:"事件本身的普遍程度，比如绿车占 85%。"},{t:"证据可靠性",d:"目击者/检测有多准。"},{t:"误判率",d:"把对的认成错的、错的认成对的比例。"}],
+pdf:[{t:"密度",d:"概率的“浓度”，越高表示越可能落在这里。"},{t:"区间",d:"一段范围，比如 18~20℃。"},{t:"连续变量",d:"取值连绵不断的量，如温度、时长、收益。"}],
+harsanyi:[{t:"类型",d:"玩家的私人底牌：收益、成本、性格。"},{t:"信念",d:"你对对方类型的概率猜测。"},{t:"自然",d:"虚拟的“上帝发牌员”，先行动并分配类型。"},{t:"不完美信息",d:"不知道“自然”具体发了什么牌。"}],
+lemon:[{t:"信息不对称",d:"一方知道、另一方不知道。"},{t:"逆向选择",d:"劣质品把优质品挤出市场。"},{t:"柠檬",d:"美国俚语里的“破车”，代指劣质品。"}],
+"incomplete-game":[{t:"不完全信息",d:"不知道对方的收益、策略或类型。"},{t:"收益函数",d:"每种结果能得多少，是对方的私密信息。"},{t:"策略",d:"打算怎么出牌的一整套方案。"}],
+meu:[{t:"期望",d:"概率加权的平均结果。"},{t:"效用",d:"结果对你的价值，主观的“爽度”。"},{t:"决策论",d:"信念（概率）+欲望（效用）→ 行动。"}],
+utility:[{t:"效用",d:"满足感或价值，不等于钱。"},{t:"边际递减",d:"越往后，每多一单位带来的效用越小。"},{t:"序数效用",d:"只比大小、不比具体数值。"}],
+"risk-aversion":[{t:"风险厌恶",d:"宁可少赚也要稳妥的偏好。"},{t:"确定性等值",d:"你愿意拿多少现金换掉一个赌局。"},{t:"溢价",d:"为买“确定性”多付的钱，即保险费。"},{t:"大数定律",d:"样本越多，平均结果越接近期望。"}],
+allais:[{t:"期望效用",d:"各结果“概率×效用”之和。"},{t:"确定性效应",d:"对确定结果过度偏爱。"},{t:"规范性理论",d:"理性的人“应该”怎么做。"},{t:"描述性理论",d:"人“实际”怎么做。"}],
+"optimist-curse":[{t:"乐观偏差",d:"高估好结果的倾向。"},{t:"赢家诅咒",d:"竞标赢家往往因为高估而多付。"},{t:"修正",d:"用贝叶斯把偏乐观的估计拉回客观。"}],
+"classical-planning":[{t:"状态",d:"世界某一时刻的完整快照。"},{t:"动作",d:"改变状态的操作，如“拿起积木”。"},{t:"目标",d:"想达到的状态描述。"},{t:"状态空间",d:"所有可能状态组成的集合。"}],
+"belief-state":[{t:"信念状态",d:"“我可能在哪几个位置”的清单。"},{t:"观测",d:"得到的线索，如脚步声、空房间。"},{t:"收敛",d:"可能性缩小到只剩一个。"}],
+conformant:[{t:"一致性",d:"无论起点在哪，都保证达成目标。"},{t:"SOP",d:"标准作业流程，谁照做都出一样的结果。"},{t:"无传感器",d:"完全看不见环境的极端情况。"}],
+pomdp:[{t:"部分可观测",d:"只能看到世界的模糊一部分。"},{t:"马尔可夫",d:"下一步只取决于当前，与更早无关。"},{t:"概率分布",d:"每种可能各有多大的概率。"},{t:"策略",d:"从状态（或信念）到动作的规则。"}],
+replan:[{t:"在线",d:"边执行边计算，不等全部算完。"},{t:"重规划",d:"发现变化后重新计算路线。"},{t:"探索与利用",d:"走新路找机会 vs 走熟路拿确定收益。"}],
+system12:[{t:"系统1",d:"快、自动、不费力的直觉思维。"},{t:"系统2",d:"慢、费力、需要专注的理性思维。"},{t:"认知轻松",d:"大脑不费力的舒服状态，容易放松警惕。"},{t:"自控",d:"压住冲动、把系统 2 拉回来的能力。"}],
+hindsight:[{t:"后见之明",d:"事后诸葛亮：结果出来后高估自己早就知道。"},{t:"叙事谬误",d:"给随机事件硬编一个因果故事。"},{t:"回归均值",d:"极端表现之后，往往回到平均水平。"}],
+qaly:[{t:"质量调整生命年",d:"年数 × 生命质量系数。"},{t:"质量系数",d:"0~1 之间的生命质量打分。"},{t:"微亡",d:"百万分之一的死亡概率，风险定价单位。"}]
+};
 /* ══════════ 状态 ══════════ */
 const memStore = {};
 const store = {
@@ -587,7 +629,7 @@ const toastEl = document.getElementById("toast");
 let toastTimer = null;
 function toast(msg){ toastEl.textContent = msg; toastEl.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(()=>toastEl.classList.remove("show"), 2600); }
 /* ══════════ 首页：兴趣卡信息流（游戏先行） ══════════ */
-function metaHtml(c){ return `<div class="meta"><b>${CHAPTERS[c.ch]}</b> · 难度 ${"★".repeat(c.diff)} · 热度 ${"🔥".repeat(c.temp)} · 吸引力 ${c.attract}</div>`; }
+function metaHtml(c){ const no = ORDER.indexOf(c.id) + 1; return `<div class="meta"><b>第 ${no}/28 课</b> · ${CHAPTERS[c.ch]} · 难度 ${"★".repeat(c.diff)} · 热度 ${"🔥".repeat(c.temp)} · 吸引力 ${c.attract}</div>`; }
 function cardHtml(c, featured){
   const isDone = !!learned[c.id];
   return `<div class="card ${featured?"featured":""}" data-id="${c.id}">
@@ -666,6 +708,10 @@ function renderDetail(id){
   const c = BYID[id]; if (!c) { renderHome(); return; }
   const x = EXTRA[c.id] || {guide:"", limit:"", next:"", nextText:""};
   const nextC = x.next ? CONCEPTS.find(k=>k.name===x.next) : null;
+  const no = ORDER.indexOf(c.id);
+  const prevC = no > 0 ? BYID[ORDER[no-1]] : null;
+  const nextInOrder = no >= 0 && no < ORDER.length-1 ? BYID[ORDER[no+1]] : null;
+  const gloss = GLOSS[c.id] || [];
   const isDone = !!learned[c.id];
   const rel = c.related.map(r=>{
     const t = CONCEPTS.find(x=>x.name === r);
@@ -673,6 +719,11 @@ function renderDetail(id){
   }).join(" ");
   app.innerHTML = `
     <button class="back" data-back>← 返回学习探索</button>
+    <div class="pathbar">
+      ${prevC ? `<button class="pbtn" data-open="${prevC.id}">← 上一课</button>` : `<span class="pbtn off">← 起点</span>`}
+      <span class="mid">第 ${no+1} / 28 课 · ${CHAPTERS[c.ch]}</span>
+      ${nextInOrder ? `<button class="pbtn" data-open="${nextInOrder.id}">下一课 →</button>` : `<span class="pbtn off">终点 →</span>`}
+    </div>
     <div class="tags"><span class="chip gold">${CHAPTERS[c.ch]}</span><span class="chip minor">难度 ${"★".repeat(c.diff)}</span><span class="chip minor">热度 ${"🔥".repeat(c.temp)}</span></div>
     <h1 class="name">${c.emoji} ${c.name}</h1>
     <div class="sub">继续阅读，你会学到：${c.hook}</div>
@@ -684,6 +735,8 @@ function renderDetail(id){
       <div class="def">${c.def}</div></div>
     <div class="dessert"><b>甜点 1 · 哲思谚语</b>　${c.dessert}</div>
     <div class="block"><h3><span class="num">03</span>核心定义</h3><div class="def">${c.def}</div></div>
+    <div class="block gloss"><h3><span class="num">词</span>术语拆解（本页黑话变人话）</h3>
+      <div class="gloss-grid">${gloss.map(g=>`<div class="gterm"><b>${g.t}</b><span>${g.d}</span></div>`).join("")}</div></div>
     <div class="block"><h3><span class="num">04</span>核心要点</h3>${c.points.map(p=>`<div class="point">${p}</div>`).join("")}</div>
     <div class="dessert"><b>甜点 2</b>　“AI 直觉正在形成”</div>
     <div class="block"><h3><span class="num">05</span>换个角度理解</h3>
